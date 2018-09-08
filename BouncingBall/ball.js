@@ -1,13 +1,14 @@
-function Ball() {
-  this.pos = createVector(width/2, height/2)
+function Ball(mass) {
+  this.pos = createVector(random(width), random(height))
   this.vel = createVector(0, 0)
   this.acc = createVector(0, 0)
+  this.mass = mass
 
   this.show = function () {
     noFill()
     stroke(255)
     strokeWeight(4)
-    ellipse(this.pos.x, this.pos.y, 80, 80)
+    ellipse(this.pos.x, this.pos.y, 40, 40)
   }
 
   this.update = function () {
@@ -20,7 +21,13 @@ function Ball() {
     this.acc.add(force)
   }
 
-  this.edges = function () {
+  this.collision = function () {
+    for (let ball of balls) {
+      if (dist(ball.pos.x, ball.pos.y, this.pos.x, this.pos.y) < 40 && ball !== this) {
+        this.vel.mult(-1)
+        ball.vel.mult(-1)
+      }
+    }
     if (this.pos.x < 0) {
       this.pos.x = 0
       this.vel.x *= -1
